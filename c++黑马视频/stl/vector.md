@@ -65,6 +65,8 @@ reserve(int len);//容器预留 len 个元素长度,预留位置不初始化,元
 >
 > 答:reserve 是容器预留空间,但在空间内不真正创建元素对象,所以在没有添加新的对象之前,不能引用容器内的元素.resize 是改变容器的大小,且在创建对象,因此,调用这个函数之后,就可以引用容器内的对象了.
 
+> 如果大概知道了数据的个数,那么就可以直接用reserve来预留空间,这样可以大大减少扩容的个数.
+
 ```c
 vector<int> v;
 int* p = NULL;
@@ -112,6 +114,126 @@ erase(const_iterator start, const_iterator end);//删除迭代器从 start 到 e
 erase(const_iterator pos);//删除迭代器指向的元素
 clear();//删除容器中所有元素
 ```
+
+```c
+//
+// Created by bruce on 18-6-7.
+//
+#include<iostream>
+#include<vector>
+using namespace std;
+void printVector(vector<int> &v)
+{
+    for(vector<int>::iterator it = v.begin();it!= v.end();it++)
+    {
+        cout << *it<< " ";
+    }
+    cout << endl;
+}
+void test01()
+{
+    vector<int> v1; //默认构造
+    int arr[] = {10,20,30,40};
+    vector<int> v2(arr,arr+sizeof(arr)/sizeof(int));
+    vector<int> v3(v2.begin(),v2.end());
+    vector<int> v4(v3);
+    printVector(v2);
+    printVector(v3);
+    printVector(v4);
+}
+
+void test02()
+{
+    int arr[] = {10,20,30,40};
+    vector<int> v1(arr,arr+sizeof(arr)/sizeof(int));
+    //成员方法
+    vector<int> v2;
+    v2.assign(v1.begin(),v1.end());
+    //重载
+    vector<int> v3;
+    v3 = v2;
+
+    printVector(v1);
+    printVector(v2);
+
+    cout << " swap" << endl;
+
+    int arr1[] = {100,200,300,400,500};
+    vector<int> v4(arr1,arr1+sizeof(arr1)/sizeof(int));
+    v4.swap(v1);
+    //这个swap的原理不过就是交换指针而已
+    //果然,因为这个两个数组的长度不一样,如果是真真交换数据的话,那么应该会出现错误.
+
+    printVector(v1);
+    printVector(v2);
+    printVector(v4);
+}
+
+void test03()
+{
+    int arr[] = {10,20,30,40};
+    vector<int> v1(arr,arr+sizeof(arr)/sizeof(int));
+    cout << "size: "<<v1.size() << endl;
+
+    if(v1.empty()){
+        cout << "empty\n";
+    }
+    else cout << "not empty\n";
+
+    cout << "capacity" << v1.capacity() << endl;
+
+    vector<int> v;
+    int* p = NULL;
+    int count = 0;// 统计 vector 容量增长几次?
+    for (int i = 0; i < 100000;i++){
+        v.push_back(i);
+        if (p != &v[0]){
+            p = &v[0];
+            count++;
+        }
+    }
+    cout << "count:" << count << endl; //打印出 30
+
+    vector<int> v2;
+    v.reserve(100000);
+    for (int i = 0; i < 100000;i++){
+        v.push_back(i);
+        if (p != &v2[0]){
+            p = &v2[0];
+            count++;
+        }
+    }
+    cout << "count:" << count << endl; //打印出 30
+}
+
+
+void test04()
+{
+    int arr[] = {10,20,30,40};
+    vector<int> v4(arr,arr+sizeof(arr)/sizeof(int));
+
+    for(int i =0 ;i<v4.size();i++)
+    {
+        cout << v4[i] << " ";
+    }
+    cout << endl;
+
+    v4.at(0) = 0;
+    for(int i =0;i<v4.size();i++)
+        cout << v4.at(i) << " ";
+
+}
+int main()
+{
+//    test01();
+//    test02();
+    test03();
+//    test04();
+    return 0;
+}
+```
+
+
 
 ### 总结:
 
