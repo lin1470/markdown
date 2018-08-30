@@ -25,7 +25,7 @@ gcc a.c b.c c.c -o app
 
     **app:a.c b.c c.c**
 
-    ​	**gcc a.c b.c c.c -o app**
+    	**gcc a.c b.c c.c -o app**
 
 - makefile中由一条或者多条规则构成
 
@@ -88,13 +88,13 @@ gcc a.c b.c c.c -o app
 
       main.o:main.c
 
-      ​	gcc -c main.c -o main.o
+      	gcc -c main.c -o main.o
 
       第二次:add.o
 
       add.o:add.c
 
-      ​	gcc -c add.c -o add.o
+      	gcc -c add.c -o add.o
 
     - 可移植性交差
 
